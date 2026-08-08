@@ -10,7 +10,12 @@ def LoadData():  #load excel database
 def RemoveEmptyColumns(df): #remove columns thiw > 90% missing values
     threshold = len(df) * 0.9
     df_clean = df.dropna(axis=1, thresh=threshold)
-    return df_clean
+    ## remove column1
+    df_clean2 = df_clean.drop(df_clean.columns[[0]],axis=1)
+    return df_clean2
+
 
 df_raw = LoadData()
 df_clean = RemoveEmptyColumns(df_raw)
+
+df_clean.to_excel("testfinal.xlsx",index=False)
