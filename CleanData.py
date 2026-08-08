@@ -27,5 +27,15 @@ def CheckDuplicateSamples():
 ch_du_sa = CheckDuplicateSamples()
 
 
+def CheckDuplicateCoordinantes():
+    duplicates = df_clean[ df_clean.duplicated ( subset=["X_in_utm","Y_in_utm"] , keep=False )]
+    return duplicates
+
+
+ch_du_co = CheckDuplicateCoordinantes()
+
 ch_du_sa.to_excel("duplicated_sample_number.xlsx",index=False)
+
+ch_du_co.to_excel("duplicated_sample_coordinantes.xlsx",index=False)
+
 df_clean.to_excel("cleaned date.xlsx",index=False)
