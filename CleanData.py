@@ -24,7 +24,7 @@ def CheckDuplicateSamples():
     duplicates = df_clean[df_clean["Sample_number"].duplicated(keep=False)]
     return duplicates
 
-ch_du_sa = CheckDuplicateSamples()
+dup_samples = CheckDuplicateSamples()
 
 
 def CheckDuplicateCoordinantes():
@@ -32,10 +32,39 @@ def CheckDuplicateCoordinantes():
     return duplicates
 
 
-ch_du_co = CheckDuplicateCoordinantes()
+dup_coords = CheckDuplicateCoordinantes()
 
-ch_du_sa.to_excel("duplicated_sample_number.xlsx",index=False)
+dup_samples.to_excel("duplicated_sample_number.xlsx",index=False)
 
-ch_du_co.to_excel("duplicated_sample_coordinantes.xlsx",index=False)
+dup_coords.to_excel("duplicated_sample_coordinantes.xlsx",index=False)
 
 df_clean.to_excel("cleaned date.xlsx",index=False)
+
+########################################################################
+#some cleaning report
+
+def GenerateReport(df_original, df_clean):
+    """Generate cleaning report"""
+    print("=" * 60)
+    print("Mining Data Cleaning Report")
+    print("=" * 60)
+    print(f"Total original records: {len(df_original)}")
+    print(f"Total cleaned records: {len(df_clean)}")
+    print(f"Total removed records: {len(df_original) - len(df_clean)}")
+    print(f"Total original columns: {len(df_original.columns)}")
+    print(f"Total cleaned columns: {len(df_clean.columns)}")
+    print(f"Duplicate Sample_number: {len(dup_samples)}")
+    print(f"Duplicate coordinates: {len(dup_coords)}")
+    print("=" * 60)
+
+    if len(dup_samples) > 0:
+        print(f"\n{len(dup_samples)} duplicate Sample_number rows:")
+        print(dup_samples[['Sample_number', 'X_in_utm', 'Y_in_utm']].head())
+
+    if len(dup_coords) > 0:
+        print(f"\n{len(dup_coords)} duplicate coordinate rows:")
+        print(dup_coords[['Sample_number', 'X_in_utm', 'Y_in_utm']].head())
+
+    return dup_samples, dup_coords
+
+dup_samples, dup_coords = GenerateReport(df_raw, df_clean)
