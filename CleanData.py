@@ -11,11 +11,21 @@ def RemoveEmptyColumns(df): #remove columns thiw > 90% missing values
     threshold = len(df) * 0.9
     df_clean = df.dropna(axis=1, thresh=threshold)
     ## remove column1
-    df_clean2 = df_clean.drop(df_clean.columns[[0]],axis=1)
+    df_clean2 = df_clean.drop(df_clean.columns[[0,3,4]],axis=1)    
     return df_clean2
+
+
 
 
 df_raw = LoadData()
 df_clean = RemoveEmptyColumns(df_raw)
 
-df_clean.to_excel("testfinal.xlsx",index=False)
+def CheckDuplicateSamples():
+    duplicates = df_clean[df_clean["Sample_number"].duplicated(keep=False)]
+    return duplicates
+
+ch_du_sa = CheckDuplicateSamples()
+
+
+ch_du_sa.to_excel("duplicated_sample_number.xlsx",index=False)
+df_clean.to_excel("cleaned date.xlsx",index=False)
